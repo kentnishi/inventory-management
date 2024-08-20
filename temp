@@ -19,3 +19,64 @@
             </Box>
         </Stack>
       </Box>
+
+
+/**
+ * 
+
+import Login from "../components/Login";
+import Register from "../components/Register";
+
+import Header from "../components/Header";
+import Home from "../components/Home";
+
+import { AuthProvider } from "../authentication/authContext";
+import { useRoutes } from "react-router-dom";
+
+function App() {
+  const routesArray = [
+    {
+      path: "/",
+      element: <Register />,
+    },
+    {
+      path: "/login",
+      element: <Login />,
+    },
+    {
+      path: "/register",
+      element: <Register />,
+    },
+    {
+      path: "/home",
+      element: <Home />,
+    },
+  ];
+  
+  const routesElement = useRoutes(routesArray);
+  return (
+    <AuthProvider>
+      <Header />
+      <div className="w-full h-screen flex flex-col">{routesElement}</div>
+    </AuthProvider>
+  );
+}
+
+export default App;
+
+import React from 'react'
+import Home from '../components/Home'
+import Register from '../components/Register'
+import { useAuth } from '../authentication/AuthContext'
+
+const App = () => {
+    return(
+    <Register/>
+
+    )
+};
+
+export default App;
+ */
+
+
