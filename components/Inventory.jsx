@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { Box, Stack, Typography, Button, Modal, TextField } from '@mui/material'
 import "../app/globals.css"
 import { firestore } from '../lib/firebase'
+
 import {
   collection,
   doc,
@@ -20,8 +21,7 @@ import SearchInventory from './SearchInventory'
  
 
 
-export default function Home() {
-  const { currentUser } = useAuth()
+export default function Inventory() {
   const [inventory, setInventory] = useState([]) 
   const [filteredInventory, setFilteredInventory] = useState([])
   const [open, setOpen] = useState(false)

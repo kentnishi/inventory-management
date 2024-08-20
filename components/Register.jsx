@@ -1,13 +1,15 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAuth } from '../authentication/AuthContext'
-import { signInWithEP } from '../authentication/auth'
-import { Navigate, Link, useNavigate } from 'react-router-dom'
+import { createUserWithEP, signInWithEP } from '../authentication/auth'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { Box, Container, Typography, TextField, Button } from '@mui/material'
 
-const Register = () => {
+export default function Register() {
 
-    const navigate = useNavigate()
+    const router = useRouter()
 
     const { userLoggedIn } = useAuth()
 
@@ -17,13 +19,19 @@ const Register = () => {
     const [isRegistering, setIsRegistering] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
 
+    useEffect(() => {
+        if (userLoggedIn) {
+            router.push('/home')
+        }
+    }, [userLoggedIn])
+
     const onSubmit = async (e) => {
         e.preventDefault()
         if (!isRegistering) {
             setIsRegistering(true)
             try {
-                await signInWithEP(email, password)
-                navigate('/inventory')
+                await createUserWithEP(email, password)
+                setIsRegistering(false)
             } catch (error) {
                 setErrorMessage(error.message)
                 setIsRegistering(false)
@@ -32,20 +40,62 @@ const Register = () => {
     }
 
     return (
-        <div>
-            {userLoggedIn && <Navigate to='/inventory' />}
-            <h1>Register</h1>
-            <form onSubmit={onSubmit}>
-                <input type='email' placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} />
-                <input type='password' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
-                <input type='password' placeholder='Confirm Password' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-                <button type='submit'>Register</button>
-            </form>
-            <p>{errorMessage}</p>
-            <Link to='/login'>Already have an account? Login</Link>
-        </div>
-        
+        <Container maxWidth="xs">
+      <Box display="flex" flexDirection="column" alignItems="center" mt={8}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Register
+        </Typography>
+        <form onSubmit={onSubmit} style={{ width: '100%' }}>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            label="Email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            label="Confirm Password"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            style={{ marginTop: '16px' }}
+          >
+            Register
+          </Button>
+        </form>
+        {errorMessage && (
+          <Typography color="error" style={{ marginTop: '16px' }}>
+            {errorMessage}
+          </Typography>
+        )}
+        <Typography style={{ marginTop: '16px' }}>
+          Already have an account?{' '}
+          <Link href="/login">
+            Login
+          </Link>
+        </Typography>
+      </Box>
+    </Container>
     )   
 
 }
-export default Register;
